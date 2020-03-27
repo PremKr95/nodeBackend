@@ -8,9 +8,14 @@ routes.get('/', (req, res, next) => {
 });
 
 routes.post('/:productId', (req, res, next) => {
+    const product = {
+        name : req.body.name,
+        price: req.body.price
+    }
     res.status(201).json({
         message: "Product Post Request",
-        id: req.params.id
+        product: product,
+        id: req.params.productId,
     })
 });
 
