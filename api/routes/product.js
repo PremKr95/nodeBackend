@@ -89,15 +89,15 @@ routes.delete('/:productId', (req, res, next) => {
 
 // Update(Patch) modified request
 routes.patch('/:productId', (req, res, next) => {
+    const id = req.params.productId
     const updateOps = {};
+    console.log("req.body", req.body);
     for (const ops of req.body) {
         updateOps[ops.propName] = ops.value
     }
-    Order.remove({_id: req.params.productId}, {$set: updateOps}).exec().then(result => {
-        res.status(200).json({
-            message: "Product Updated Successfully",
-            order: result
-        })
+    console.log("updateOps", updateOps)
+    Order.update({_id: id}, { $set: updateOps}).exec().then(result => {
+        res.status(200).json(result)
     }).catch(error => {
         res.status(500).json({
             error: error
