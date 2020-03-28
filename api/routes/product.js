@@ -22,6 +22,20 @@ routes.post('/', (req, res, next) => {
      });
 });
 
+
+// Normal Post request
+routes.post('/:productId', (req, res, next) => {
+    const product = {
+        name : req.body.name,
+        price: req.body.price
+    }
+    res.status(201).json({
+        message: "Product Post Request",
+        product: product,
+        id: req.params.productId,
+    })
+});
+
 // Modified GET request using mongoose.
 routes.get('/', (req, res, next) => {
     Order.find().exec().then(doc => {
@@ -64,6 +78,15 @@ routes.delete('/:productId', (req, res, next) => {
     })
 })
 
+// Normal Delete Request
+routes.delete('/:productId', (req, res, next) => {
+    res.status(200).json({
+        message: "Product Delete Request",
+        id: req.params.id
+    });
+});
+
+
 // Update(Patch) modified request
 routes.patch('/:productId', (req, res, next) => {
     const updateOps = {};
@@ -83,18 +106,7 @@ routes.patch('/:productId', (req, res, next) => {
 })
 
 
-routes.post('/:productId', (req, res, next) => {
-    const product = {
-        name : req.body.name,
-        price: req.body.price
-    }
-    res.status(201).json({
-        message: "Product Post Request",
-        product: product,
-        id: req.params.productId,
-    })
-});
-
+// Normal Patch
 routes.patch('/:productId', (req, res, next) => {
     res.status(201).json({
         message: "Product Patch Request",
@@ -102,11 +114,6 @@ routes.patch('/:productId', (req, res, next) => {
     });
 });
 
-routes.delete('/:productId', (req, res, next) => {
-    res.status(200).json({
-        message: "Product Delete Request",
-        id: req.params.id
-    });
-});
+
 
 module.exports = routes;
