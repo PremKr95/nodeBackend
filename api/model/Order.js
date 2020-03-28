@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const orderSchema = mongoose.Schema({
     _id : mongoose.Schema.Types.ObjectId,
-    name:  {type: String, required: true},
-    price: {type: Number, required: true} // required to make the field mandatory. I user doesn't send it then it will throw error
+    product : { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true}, // To connect schema with Product 
+    quantity: { type: Number, default: 1} // If quanitity is not passed then default 1 is taken. 
 });
 module.exports = mongoose.model('Order', orderSchema);

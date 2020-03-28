@@ -1,16 +1,16 @@
 const express = require('express');
 const routes = express.Router();
-const Order = require('../model/Order')
+const Product = require('../model/product')
 const mongoose = require('mongoose');
 
 // Modified Post request using mongoose.
 routes.post('/', (req, res, next) => {
-    const order = new Order({
+    const product = new Product({
         _id : mongoose.Types.ObjectId(),
         name: req.body.name,
         price: req.body.price
     });
-     order.save().then(result => {
+    product.save().then(result => {
          res.status(201).json({
              message: "Created Product Successfully",
              createdProduct : {
@@ -47,7 +47,7 @@ routes.post('/:productId', (req, res, next) => {
 // Modified GET request using mongoose.
 routes.get('/', (req, res, next) => {
 
-    Order.find()
+    Product.find()
         .select('name price _id')
         .exec()
         .then(docs => {
@@ -75,10 +75,10 @@ routes.get('/', (req, res, next) => {
 
 // Modified GET request to get the detail of a product using product ID.
 routes.get('/:productId', (req, res, next) => {
-    Order.findById(req.params.productId).exec().then(doc => {
+    Product.findById(req.params.productId).exec().then(doc => {
         res.status(200).json({
            message: "Data for Given Product ID",
-           order: doc 
+           product: doc 
         });
     }).catch(error => {
         res.status(500).json({
@@ -89,25 +89,23 @@ routes.get('/:productId', (req, res, next) => {
 
 // Modified DELETE request with Product ID.
 routes.delete('/:productId', (req, res, next) => {
-    Order.remove({_id: req.params.id}).then(result => {
-        res.status(200).json({
-            message: "Order ID deleted",
-            order: result
-        });
+    const id = req.params.productId
+    Product.remove({_id: id}).then(result => {
+        console.log("result", result)
+        res.status(200).json(result)
     }).catch(error => {
-        res.status(500).json({
-            error: error
-        })
+        console.log("error", error)
+        res.status(500).json({error: error})
     })
 })
 
 // Normal Delete Request
-routes.delete('/:productId', (req, res, next) => {
-    res.status(200).json({
-        message: "Product Delete Request",
-        id: req.params.id
-    });
-});
+// routes.delete('/:productId', (req, res, next) => {
+//     res.status(200).json({
+//         message: "Product Delete Request",
+//         id: req.params.id
+//     });
+// });
 
 
 // Update(Patch) modified request
@@ -119,7 +117,7 @@ routes.patch('/:productId', (req, res, next) => {
         updateOps[ops.propName] = ops.value
     }
     console.log("updateOps", updateOps)
-    Order.update({_id: id}, { $set: updateOps}).exec().then(result => {
+    Product.update({_id: id}, { $set: updateOps}).exec().then(result => {
         res.status(200).json(result)
     }).catch(error => {
         res.status(500).json({
