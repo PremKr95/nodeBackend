@@ -20,6 +20,7 @@ mongoose.connect("mongodb+srv://premmongodb:mongodb@95@node-rest-shop-nhhf7.mong
      //MongooseServerSelectionError MongooseError [MongooseServerSelectionError]: Authentication failed
      console.log("Error", error)
   });
+  mongoose.Promise = global.Promise;
 app.use('/product', productRoutes);
 
 module.exports = app;

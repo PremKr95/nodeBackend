@@ -12,8 +12,16 @@ routes.post('/', (req, res, next) => {
     });
      order.save().then(result => {
          res.status(201).json({
-             message: "Product POST successfull",
-             order: order
+             message: "Created Product Successfully",
+             createdProduct : {
+                 name: result.name,
+                 price: result.price,
+                 _id: result._id,
+                 request: {
+                     type: 'POST',
+                     url: 'http://localhost:3000/product/' +result._id
+                 }
+             }
          })
      }).catch(error => {
          res.status(500).json({
@@ -38,11 +46,26 @@ routes.post('/:productId', (req, res, next) => {
 
 // Modified GET request using mongoose.
 routes.get('/', (req, res, next) => {
-    Order.find().exec().then(doc => {
-        res.status(200).json({
-            message: "Product GET request",
-            order: doc
-        });
+
+    Order.find()
+        .select('name price _id')
+        .exec()
+        .then(docs => {
+        const response = {
+            count: docs.length,
+            products: docs.map(doc => {
+                return {
+                    name : doc.name,
+                    price: doc.price,
+                    _id: doc._id,
+                    request : {
+                        type: 'GET',
+                        url: 'http://localhost:3000/product/' +doc._id 
+                    }
+                }
+            })
+        }
+        res.status(200).json(response);
     }).catch(error => {
         res.status(500).json({
             error: error
